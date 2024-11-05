@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Devolução de Empréstimo</h2>
+    <p>Empréstimo: {{ emprestimo }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registrar Devolução</button>
+    </form>
+{% endblock %}
