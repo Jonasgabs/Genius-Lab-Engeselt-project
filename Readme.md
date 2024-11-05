@@ -24,27 +24,92 @@
 
 ## assim está estruturado o sistema :
 
-    Projeto/
-    ├── biblioteca_genius_lab/
-    │   ├── __init__.py
+    projeto/
+    ├── biblioteca_genius_lab/          # Diretório do projeto Django
     │   ├── settings.py
     │   ├── urls.py
-    │   ├── wsgi.py
-    │
-    ├── core/                     # Aplicação  para funcionalidades essenciais
-    │   ├── migrations/
-    │   ├── templates/
-    │   │   ├── home.html
-    │   │   ├── login.html
-    │   │   └── lista_livros.html
-    │   ├── __init__.py
-    │   ├── models.py             # Modelos para Usuário, Livro e Empréstimo
-    │   ├── views.py              # Views para cada funcionalidade principal
-    │   ├── urls.py               # URLs específicas da aplicação
-    │   └── forms.py              # Formulários para login e empréstimos
-    │
+    │   └── wsgi.py
+    ├── livros/              # Aplicação para gerenciar livros
+    │   ├── models.py
+    │   ├── views.py
+    │   ├── urls.py
+    │   └── templates/
+    ├── usuarios/            # Aplicação para gerenciar usuários
+    │   ├── models.py
+    │   ├── views.py
+    │   ├── urls.py
+    │   └── templates/
+    ├── emprestimos/         # Aplicação para gerenciar empréstimos
+    │   ├── models.py
+    │   ├── views.py
+    │   ├── urls.py
+    │   └── templates/
+    ├── templates/           # Templates globais
+    │   └── base.html
+    ├── static/              # Arquivos estáticos (CSS, JS)
     ├── manage.py
-    └── README.md
+    └── requirements.txt
 
 
+### passo a passo até chegarmos na estrutura do projeto e como o projeto foi construido:
 
+#### inicializando a pasta com estrutura django para biblioteca_genius_lab
+
+    django-admin startproject biblioteca_genius_lab
+---
+
+*NAO ESQUECER -> Sempre que  criar ou modificar modelos em suas aplicações, é necessário criar novas migrações e aplicá-las*
+
+        python manage.py makemigrations
+        python manage.py migrate
+---
+
+#### testar a inicialização (antes que comece a dar erro) (lembrar de estar no repo correto) 
+
+    python manage.py runserver
+
+
+### Após criado a pasta principal com o modelo django foram criados as pastas separadas mas para cada entidade, no caso usuarios, livros e emprestimos. O passo é o mesmo do anterior, é só jogar os comandos no terminal que os arquivos sao gerados no formato django bem bonitinho 
+
+    python manage.py startapp usuarios
+    python manage.py startapp livros
+    python manage.py startapp emprestimos
+
+#### neste momento a estrutura fica assim
+    biblioteca/
+    ├── biblioteca/
+    ├── emprestimos/
+    ├── livros/
+    ├── usuarios/
+    ├── manage.py
+
+*lembrar de adicionar as aplicações na lista  de apps instalados*
+
+    deve ficar em biblioteca_genius_lab\biblioteca_genius_lab\settings.py
+
+![alt text](img\image.png)
+
+##### *foi decidido que este seria um bom momento para configurar o banco de dados, nosso projeto tinha como requisito utilizar o postgreSQL então faremos desta forma*
+
+###### dentro do Postgresql, acessamos o prompt  com :
+    sudo -u postgres psql
+
+###### e usamos os comandos sql  (sql shell) para criar o nosso banco de dados de fato (e usuario admin)
+
+    CREATE DATABASE Genius_Lab_lib;
+    CREATE USER biblioteca_user WITH PASSWORD 'a_senha_que_escolheu'; (ronaldinho_gaucho@10)
+    GRANT ALL PRIVILEGES ON DATABASE Genius_Lab_lib TO biblioteca_user;
+
+##### *Lembrar do conector do postgre*
+
+    pip install psycopg2-binary
+
+#### por padrão o django trabalha com o sqlite então mudamos para o postgres lá no data base novamente.
+
+*os dados devem ser os mesmo dos adicionados lá no terminal do sql (sql shell)*
+
+![alt text](img/image_database.png)
+
+##### agora basta executar as migracões 
+
+    python manage.py migrate
