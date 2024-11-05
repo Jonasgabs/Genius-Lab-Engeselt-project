@@ -24,31 +24,57 @@
 
 ## assim está estruturado o sistema :
 
-    projeto/
-    ├── biblioteca_genius_lab/          # Diretório do projeto Django
-    │   ├── settings.py
-    │   ├── urls.py
-    │   └── wsgi.py
-    ├── livros/              # Aplicação para gerenciar livros
-    │   ├── models.py
-    │   ├── views.py
-    │   ├── urls.py
-    │   └── templates/
-    ├── usuarios/            # Aplicação para gerenciar usuários
-    │   ├── models.py
-    │   ├── views.py
-    │   ├── urls.py
-    │   └── templates/
-    ├── emprestimos/         # Aplicação para gerenciar empréstimos
-    │   ├── models.py
-    │   ├── views.py
-    │   ├── urls.py
-    │   └── templates/
-    ├── templates/           # Templates globais
-    │   └── base.html
-    ├── static/              # Arquivos estáticos (CSS, JS)
-    ├── manage.py
-    └── requirements.txt
+    biblioteca_genius_lab/
+        ├── biblioteca_genius_lab/          # Diretório do projeto Django
+        │   ├── __init__.py
+        │   ├── settings.py
+        │   ├── urls.py
+        │   └── wsgi.py
+        ├── emprestimos/                    # Aplicação para gerenciar empréstimos
+        │   ├── __init__.py
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── models.py
+        │   ├── views.py
+        │   ├── urls.py
+        │   ├── forms.py
+        │   └── templates/
+        │       └── emprestimos/
+        │           ├── registro_emprestimo.html
+        │           ├── devolucao_emprestimo.html
+        │           └── relatorio.html
+        ├── livros/                         # Aplicação para gerenciar livros
+        │   ├── __init__.py
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── models.py
+        │   ├── views.py
+        │   ├── urls.py
+        │   ├── forms.py
+        │   └── templates/
+        │       └── livros/
+        │           └── cadastro_livro.html
+        ├── usuarios/                       # Aplicação para gerenciar usuários
+        │   ├── __init__.py
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── models.py
+        │   ├── views.py
+        │   ├── urls.py
+        │   ├── forms.py
+        │   └── templates/
+        │       └── usuarios/
+        │           └── cadastro_usuario.html
+        ├── templates/                      # Templates globais
+        │   ├── base.html
+        │   └── index.html
+        ├── static/                         # Arquivos estáticos (CSS, JS)
+        │   ├── css/
+        │   │   └── styles.css
+        │   └── js/
+        │       └── scripts.js
+        ├── manage.py
+        └── requirements.txt
 
 
 ### passo a passo até chegarmos na estrutura do projeto e como o projeto foi construido:
@@ -77,7 +103,7 @@
 
 #### neste momento a estrutura fica assim
     biblioteca/
-    ├── biblioteca/
+    ├── biblioteca_genius_lab/
     ├── emprestimos/
     ├── livros/
     ├── usuarios/
@@ -97,7 +123,7 @@
 ###### e usamos os comandos sql  (sql shell) para criar o nosso banco de dados de fato (e usuario admin)
 
     CREATE DATABASE Genius_Lab_lib;
-    CREATE USER biblioteca_user WITH PASSWORD 'a_senha_que_escolheu'; (ronaldinho_gaucho@10)
+    CREATE USER biblioteca_user WITH PASSWORD  (neste caso usarei o padrao "postgres") 'a_senha_que_escolheu'; (ronaldinho_gaucho@10)
     GRANT ALL PRIVILEGES ON DATABASE Genius_Lab_lib TO biblioteca_user;
 
 ##### *Lembrar do conector do postgre*
@@ -113,3 +139,39 @@
 ##### agora basta executar as migracões 
 
     python manage.py migrate
+
+#### agora os modelos deverao ser criados, de comeco, os usuários.Sempre usando POO
+
+#### na etapa testes sempre utilizo estes passos:
+
+*Ativar o Ambiente Virtual:*
+
+No PowerShell:
+
+
+    .\venv\Scripts\Activate.ps1
+
+*Instalar as Dependências (se necessário):*
+
+
+    pip install -r requirements.txt
+
+*executar as Migrações:*
+
+
+    python manage.py makemigrations
+    python manage.py migrate
+
+*Criar um Superusuário (se ainda não tiver):*
+
+
+    python manage.py createsuperuser
+
+*Executar o Servidor:*
+
+
+    python manage.py runserver
+
+
+*Interface Administrativa: http://127.0.0.1:8000/admin/*
+*Aplicação Principal: http://127.0.0.1:8000/*

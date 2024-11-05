@@ -4,7 +4,7 @@ from .forms import RegistroEmprestimoForm, DevolucaoEmprestimoForm
 from .models import Emprestimo
 from livros.models import Livro
 from django.utils import timezone
-from django.db.models import Q
+from django.contrib import messages
 
 def is_admin(user):
     return user.tipo_usuario == 'admin'
@@ -21,6 +21,7 @@ def registro_emprestimo(request):
                 livro.quantidade_disponivel -= 1
                 livro.save()
                 emprestimo.save()
+                messages.success(request, "Empréstimo registrado com sucesso!")
                 return redirect('index')
             else:
                 form.add_error('livro', 'Este livro não está disponível para empréstimo.')
@@ -41,9 +42,10 @@ def devolucao_emprestimo(request, emprestimo_id):
             livro = emprestimo.livro
             livro.quantidade_disponivel += 1
             livro.save()
+            messages.success(request, "Devolução registrada com sucesso!")
             return redirect('index')
     else:
-        form = DevolucaoEmprestimoForm()
+        form = DevolucaoEmprestimoForm(instance=emprestimo)
     return render(request, 'emprestimos/devolucao_emprestimo.html', {'form': form, 'emprestimo': emprestimo})
 
 @login_required

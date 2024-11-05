@@ -17,15 +17,15 @@ ALLOWED_HOSTS = []
 
 # Installed Apps
 INSTALLED_APPS = [
+    'usuarios',          
+    'livros',
+    'emprestimos',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',
-    'livros',
-    'emprestimos',
 ]
 
 # Middleware
@@ -67,7 +67,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Genius_Lab_lib',
-        'USER': 'biblioteca_user',
+        'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
