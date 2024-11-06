@@ -1,16 +1,15 @@
+# usuarios/forms.py
+
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Usuario
 
-class CadastroUsuarioForm(UserCreationForm):
-    email = forms.EmailField(required=True, help_text='Obrigatório. Informe um e-mail válido.')
-
+class UsuarioCreationForm(UserCreationForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'password1', 'password2', 'tipo_usuario', 'endereco', 'telefone']
+        fields = ('email', 'nome_completo', 'tipo_usuario', 'endereco', 'telefone')
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if Usuario.objects.filter(email=email).exists():
-            raise forms.ValidationError('Este e-mail já está cadastrado.')
-        return email
+class UsuarioChangeForm(UserChangeForm):
+    class Meta:
+        model = Usuario
+        fields = ('email', 'nome_completo', 'tipo_usuario', 'endereco', 'telefone')

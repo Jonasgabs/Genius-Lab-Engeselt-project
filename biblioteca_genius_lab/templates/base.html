@@ -1,43 +1,45 @@
 <!-- templates/base.html -->
-{% load static %} <!-- para carregar o arquivo-->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Biblioteca - Genius Lab</title>
+    <title>{% block title %}Biblioteca Genius Lab{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <header>
-        <h1>Genius Lab</h1>
+        <h1>Biblioteca Genius Lab</h1>
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Início</a></li>
                 {% if user.is_authenticated %}
                     {% if user.tipo_usuario == 'admin' %}
-                        <li><a href="{% url 'cadastro_usuario' %}">Cadastrar Usuário</a></li>
-                        <li><a href="{% url 'cadastro_livro' %}">Cadastrar Livro</a></li>
-                        <li><a href="{% url 'registro_emprestimo' %}">Registrar Empréstimo</a></li>
-                        <li><a href="{% url 'relatorio_emprestimos' %}">Relatórios</a></li>
+                        <li><a href="{% url 'admin_dashboard' %}">Painel Admin</a></li>
                     {% else %}
-                        <!-- Links para Leitores, se necessário -->
-                        <li><a href="#">Meus Empréstimos</a></li>
+                        <li><a href="{% url 'leitor_dashboard' %}">Painel Leitor</a></li>
                     {% endif %}
-                    <li><a href="{% url 'logout' %}">Sair</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'registrar_usuario' %}">Registrar-se</a></li>
                 {% endif %}
             </ul>
         </nav>
     </header>
     <main>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         {% block content %}
         {% endblock %}
     </main>
     <footer>
-        <p>&copy; 2024 Genius Lab by Jonas. Todos os direitos reservados.</p>
+        <p>&copy; 2023 Biblioteca Genius Lab</p>
     </footer>
-    <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 </html>

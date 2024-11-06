@@ -1,8 +1,12 @@
+# emprestimos/urls.py
+
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('registro/', views.registro_emprestimo, name='registro_emprestimo'),
-    path('devolucao/<int:emprestimo_id>/', views.devolucao_emprestimo, name='devolucao_emprestimo'),
+    path('registrar/', views.registrar_emprestimo, name='registrar_emprestimo'),
+    path('devolver/', views.devolver_emprestimo, name='devolver_emprestimo'),
     path('relatorio/', views.relatorio_emprestimos, name='relatorio_emprestimos'),
+    path('solicitar/', views.solicitar_emprestimo, name='solicitar_emprestimo'),
+    path('historico/', views.historico_emprestimos, name='historico_emprestimos'),
 ]

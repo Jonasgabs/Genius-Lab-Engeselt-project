@@ -1,0 +1,14 @@
+<!-- templates/emprestimos/historico_emprestimos.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Meu Histórico de Empréstimos</h2>
+<ul>
+    {% for emprestimo in emprestimos %}
+        <li>{{ emprestimo.livro.titulo }} - {{ emprestimo.data_emprestimo }} - Status: {{ emprestimo.get_status_display }}</li>
+    {% empty %}
+        <li>Você não possui empréstimos registrados.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

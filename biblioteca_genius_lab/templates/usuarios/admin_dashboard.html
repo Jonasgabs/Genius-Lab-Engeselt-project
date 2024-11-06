@@ -1,0 +1,15 @@
+<!-- templates/usuarios/admin_dashboard.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Bem-vindo, {{ user.nome_completo }}!</h2>
+<h3>Painel do Administrador</h3>
+<ul>
+    <li><a href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
+    <li><a href="{% url 'registrar_usuario' %}">Cadastrar Usuário</a></li>
+    <li><a href="{% url 'registrar_emprestimo' %}">Registrar Empréstimo</a></li>
+    <li><a href="{% url 'devolver_emprestimo' %}">Registrar Devolução</a></li>
+    <li><a href="{% url 'relatorio_emprestimos' %}">Relatório de Empréstimos</a></li>
+</ul>
+{% endblock %}

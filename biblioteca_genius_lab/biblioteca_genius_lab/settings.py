@@ -3,21 +3,20 @@
 import os
 from pathlib import Path
 
-# Base Directory
+# Diretório base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret Key (Mantenha em segredo em produção)
+# Chave secreta (mantenha em segredo em produção)
 SECRET_KEY = 'sua_chave_secreta_aqui'
 
-# Debug
+# Depuração ativada para desenvolvimento
 DEBUG = True
 
-# Allowed Hosts
 ALLOWED_HOSTS = []
 
-# Installed Apps
+# Aplicativos instalados
 INSTALLED_APPS = [
-    'usuarios',          
+    'usuarios',
     'livros',
     'emprestimos',
     'django.contrib.admin',
@@ -27,6 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+# Modelo de usuário customizado
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Middleware
 MIDDLEWARE = [
@@ -39,19 +40,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL Configuration
 ROOT_URLCONF = 'biblioteca_genius_lab.urls'
 
 # Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Diretório global de templates
+        'DIRS': [BASE_DIR / 'templates'],  # Diretório dos templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # Necessário para acessar 'request' nos templates
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -59,10 +59,9 @@ TEMPLATES = [
     },
 ]
 
-# WSGI Application
 WSGI_APPLICATION = 'biblioteca_genius_lab.wsgi.application'
 
-# Banco de Dados
+# Configuração do banco de dados
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -74,10 +73,7 @@ DATABASES = {
     }
 }
 
-# Autenticação
-AUTH_USER_MODEL = 'usuarios.Usuario'  # Usando um modelo de usuário customizado
-
-# Password Validation
+# Validação de senhas
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -85,21 +81,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    # Adicione mais validadores conforme necessário
 ]
 
-# Internationalizacao
+# Internacionalização
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
-# Static Files
+#rotas de login / logout
+LOGIN_REDIRECT_URL = 'index'  # URL nomeada para a página inicial
+LOGIN_URL = 'login'  # URL nomeada para a página de login
+LOGOUT_REDIRECT_URL = 'index'  # Redireciona para a página inicial após logout
+
+# Arquivos estáticos
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# pra voltar pro home apos o login
-
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'index'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    h2{
+        text-align: center;
+    }
+
+    span{
+        margin-bottom: 3000px;
+    }
+    form{
+        display: grid;
+        align-items: center;
+        align-content: center;
+    }
+</style>
+<h2>Registrar-se</h2>
+<form method="post">
+    <button type="submit">Registrar</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrar</button>
+</form>
+{% endblock %}

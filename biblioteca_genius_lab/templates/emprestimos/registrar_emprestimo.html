@@ -1,0 +1,18 @@
+<!-- templates/emprestimos/devolver_emprestimo.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Registrar Devolução</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="emprestimo_id">Empréstimo:</label>
+    <select name="emprestimo_id" id="emprestimo_id">
+        {% for emprestimo in emprestimos %}
+            <option value="{{ emprestimo.id }}">{{ emprestimo }}</option>
+        {% endfor %}
+    </select>
+    {{ form.as_p }}
+    <button type="submit">Registrar Devolução</button>
+</form>
+{% endblock %}

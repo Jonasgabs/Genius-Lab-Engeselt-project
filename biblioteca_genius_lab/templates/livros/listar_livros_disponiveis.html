@@ -1,0 +1,17 @@
+<!-- templates/livros/listar_livros_disponiveis.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Livros Disponíveis</h2>
+<ul>
+    {% for livro in livros %}
+        <li>
+            <strong>{{ livro.titulo }}</strong> por {{ livro.autor }}<br>
+            Quantidade Disponível: {{ livro.quantidade_disponivel }}
+        </li>
+    {% empty %}
+        <li>Nenhum livro disponível no momento.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

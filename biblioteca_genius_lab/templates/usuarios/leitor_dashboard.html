@@ -1,0 +1,13 @@
+<!-- templates/usuarios/leitor_dashboard.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Bem-vindo, {{ user.nome_completo }}!</h2>
+<h3>Painel do Leitor</h3>
+<ul>
+    <li><a href="{% url 'listar_livros_disponiveis' %}">Ver Livros Disponíveis</a></li>
+    <li><a href="{% url 'solicitar_emprestimo' %}">Solicitar Empréstimo</a></li>
+    <li><a href="{% url 'historico_emprestimos' %}">Meu Histórico de Empréstimos</a></li>
+</ul>
+{% endblock %}
