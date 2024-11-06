@@ -7,7 +7,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Chave secreta (mantenha em segredo em produção)
-SECRET_KEY = 'sua_chave_secreta_aqui'
+SECRET_KEY = 'xi09K84HbRqnQuH4HhbHSwRZX5hyLuduvQOYMpcjuNLc1xC8sbO1DrApQFytBwCcQPE'
 
 # Depuração ativada para desenvolvimento
 DEBUG = True

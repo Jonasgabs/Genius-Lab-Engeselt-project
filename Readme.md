@@ -9,6 +9,40 @@
 
 ---
 
+### como inicializar a aplicação
+
+0 - *Ative o ambiente virtual*
+
+1 - *Instale as dependências:*
+
+    pip install -r requirements.txt
+
+2 - *Crie o banco de dados (com postgres)*
+
+    Windows: Abra o pgAdmin ou use o Prompt de Comando:
+
+    psql -U postgres
+
+3 - *Crie o banco de dados*
+
+    CREATE DATABASE Genius_Lab_lib;
+
+4 - *no terminal aplicaque as migracoes*
+
+    python manage.py makemigrations usuarios
+    python manage.py makemigrations livros
+    python manage.py makemigrations emprestimos
+    python manage.py migrate
+
+
+5 - *inicie o servidor*
+
+    python manage.py runserver
+
+
+
+
+
 ## o arquivo requirementes foi gerado usando : 
     pip freeze > requirements.txt
 
@@ -25,56 +59,70 @@
 ## assim está estruturado o sistema :
 
     biblioteca_genius_lab/
-        ├── biblioteca_genius_lab/          # Diretório do projeto Django
-        │   ├── __init__.py
-        │   ├── settings.py
-        │   ├── urls.py
-        │   └── wsgi.py
-        ├── emprestimos/                    # Aplicação para gerenciar empréstimos
-        │   ├── __init__.py
-        │   ├── admin.py
-        │   ├── apps.py
-        │   ├── models.py
-        │   ├── views.py
-        │   ├── urls.py
-        │   ├── forms.py
-        │   └── templates/
-        │       └── emprestimos/
-        │           ├── registro_emprestimo.html
-        │           ├── devolucao_emprestimo.html
-        │           └── relatorio.html
-        ├── livros/                         # Aplicação para gerenciar livros
-        │   ├── __init__.py
-        │   ├── admin.py
-        │   ├── apps.py
-        │   ├── models.py
-        │   ├── views.py
-        │   ├── urls.py
-        │   ├── forms.py
-        │   └── templates/
-        │       └── livros/
-        │           └── cadastro_livro.html
-        ├── usuarios/                       # Aplicação para gerenciar usuários
-        │   ├── __init__.py
-        │   ├── admin.py
-        │   ├── apps.py
-        │   ├── models.py
-        │   ├── views.py
-        │   ├── urls.py
-        │   ├── forms.py
-        │   └── templates/
-        │       └── usuarios/
-        │           └── cadastro_usuario.html
-        ├── templates/                      # Templates globais
-        │   ├── base.html
-        │   └── index.html
-        ├── static/                         # Arquivos estáticos (CSS, JS)
-        │   ├── css/
-        │   │   └── styles.css
-        │   └── js/
-        │       └── scripts.js
-        ├── manage.py
-        └── requirements.txt
+    ├── manage.py
+    ├── venv/
+    │   └── ... (arquivos do ambiente virtual)
+    ├── biblioteca_genius_lab/
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py
+    │   ├── urls.py
+    │   └── wsgi.py
+    ├── usuarios/
+    │   ├── migrations/
+    │   │   ├── __init__.py
+    │   │   └── 0001_initial.py
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   ├── forms.py
+    │   ├── models.py
+    │   ├── tests.py
+    │   ├── urls.py
+    │   └── views.py
+    ├── livros/
+    │   ├── migrations/
+    │   │   ├── __init__.py
+    │   │   └── 0001_initial.py
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   ├── forms.py
+    │   ├── models.py
+    │   ├── tests.py
+    │   ├── urls.py
+    │   └── views.py
+    ├── emprestimos/
+    │   ├── migrations/
+    │   │   ├── __init__.py
+    │   │   └── 0001_initial.py
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   ├── forms.py
+    │   ├── models.py
+    │   ├── tests.py
+    │   ├── urls.py
+    │   └── views.py
+    ├── templates/                                      
+    │   ├── base.html
+    │   ├── index.html
+    │   ├── usuarios/
+    │   │   ├── registrar_usuario.html
+    │   │   └── login.html
+    │   ├── livros/
+    │   │   ├── listar_livros_disponiveis.html
+    │   │   └── cadastrar_livro.html
+    │   └── emprestimos/
+    │       ├── historico_emprestimos.html
+    │       ├── relatorio_emprestimos.html
+    │       ├── registrar_emprestimo.html
+    │       ├── devolver_emprestimo.html
+    │       └── solicitar_emprestimo.html
+    ├── static/
+    │   └── css/
+    │       └── styles.css
+    └── requirements.txt
 
 
 ### passo a passo até chegarmos na estrutura do projeto e como o projeto foi construido:
@@ -86,13 +134,14 @@
 
 *NAO ESQUECER -> Sempre que  criar ou modificar modelos em suas aplicações, é necessário criar novas migrações e aplicá-las*
 
-        python manage.py makemigrations
+        python manage.py makemigrations usuarios
+        python manage.py makemigrations livros
+        python manage.py makemigrations emprestimos
         python manage.py migrate
+
 ---
 
-#### testar a inicialização (antes que comece a dar erro) (lembrar de estar no repo correto) 
 
-    python manage.py runserver
 
 
 ### Após criado a pasta principal com o modelo django foram criados as pastas separadas mas para cada entidade, no caso usuarios, livros e emprestimos. O passo é o mesmo do anterior, é só jogar os comandos no terminal que os arquivos sao gerados no formato django bem bonitinho 
@@ -100,6 +149,11 @@
     python manage.py startapp usuarios
     python manage.py startapp livros
     python manage.py startapp emprestimos
+
+
+#### testar a inicialização (antes que comece a dar erro) (lembrar de estar no repo correto) 
+
+    python manage.py runserver
 
 #### neste momento a estrutura fica assim
     biblioteca/
@@ -120,7 +174,7 @@
 ###### dentro do Postgresql, acessamos o prompt  com :
     sudo -u postgres psql
 
-###### e usamos os comandos sql  (sql shell) para criar o nosso banco de dados de fato (e usuario admin)
+###### e usamos os comandos sql  (sql shell) para criar o nosso banco de dados de fato (e usuario caso voce queira admin, mas usarei o padrao)
 
     CREATE DATABASE Genius_Lab_lib;
     CREATE USER biblioteca_user WITH PASSWORD  (neste caso usarei o padrao "postgres") 'a_senha_que_escolheu'; (ronaldinho_gaucho@10)
@@ -173,5 +227,5 @@ No PowerShell:
     python manage.py runserver
 
 
-*Interface Administrativa: http://127.0.0.1:8000/admin/*
+
 *Aplicação Principal: http://127.0.0.1:8000/*

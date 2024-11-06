@@ -1,5 +1,6 @@
 <!-- templates/base.html -->
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,11 +8,28 @@
     <title>{% block title %}Biblioteca Genius Lab{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+<style>
+    nav li a {
+        display: block;
+        padding: 10px 20px;
+        color: #ffffff;
+        background-color: #153449;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        margin: 10px;
+    }
+    nav li a:hover{
+        background-color: #3498db;
+    }
+</style>
 <body>
     <header>
         <h1>Biblioteca Genius Lab</h1>
         <nav>
-            <ul>
+            <ul >
                 <li><a href="{% url 'index' %}">Início</a></li>
                 {% if user.is_authenticated %}
                     {% if user.tipo_usuario == 'admin' %}
@@ -38,8 +56,10 @@
         {% block content %}
         {% endblock %}
     </main>
-    <footer>
-        <p>&copy; 2023 Biblioteca Genius Lab</p>
+    <footer style="display: flex; align-items: center; margin-top: 100px; text-align: center;">
+        <img src="data:image/png;base64,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" 
+        alt="logo engeselt" width="100px">
+        <p style="text-align: center;">&copy; 2024 Biblioteca Genius Lab by Jonas Sarmento</p>
     </footer>
-</body>
+</body >
 </html>

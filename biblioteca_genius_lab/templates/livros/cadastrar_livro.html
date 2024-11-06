@@ -3,8 +3,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<h2>Cadastrar Livro</h2>
+<style>
+    form{
+        display: grid;
+        align-items: center;
+        align-content: center;
+    }
+    h2{
+        text-align: center;
+    }
+</style>
+<h2 >Cadastrar Livro</h2>
 <form method="post">
     <button type="submit">Cadastrar</button>
     {% csrf_token %}

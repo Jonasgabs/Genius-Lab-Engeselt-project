@@ -3,6 +3,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    h2{
+        text-align: center;
+    }
+    form{
+        display: grid;
+        align-items: center;
+        align-content: center;
+    }
+</style>
 <h2>Registrar Devolução</h2>
 <form method="post">
     {% csrf_token %}

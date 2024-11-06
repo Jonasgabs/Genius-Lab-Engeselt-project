@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    h2, p{
+        text-align: center;
+    }
+    form{
+        display: grid;
+        align-items: center;
+        align-content: center;
+    }
+</style>
     <h2>Devolução de Empréstimo</h2>
     <p>Empréstimo: {{ emprestimo }}</p>
     <form method="post">

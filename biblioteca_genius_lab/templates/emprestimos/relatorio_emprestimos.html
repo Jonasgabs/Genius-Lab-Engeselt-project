@@ -3,8 +3,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    h2{
+        text-align: center;
+    }
+    #historico_emprestimos li{
+        text-align: center;
+        list-style-type: none;
+    }
+    
+</style>
 <h2>Meu Histórico de Empréstimos</h2>
-<ul>
+<ul id="historico_emprestimos">
     {% for emprestimo in emprestimos %}
         <li>{{ emprestimo.livro.titulo }} - {{ emprestimo.data_emprestimo }} - Status: {{ emprestimo.get_status_display }}</li>
     {% empty %}

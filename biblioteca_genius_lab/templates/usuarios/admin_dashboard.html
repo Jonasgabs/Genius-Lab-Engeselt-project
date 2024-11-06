@@ -3,9 +3,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<style>
+        h2, h3 {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+    #admin_dashboard {
+        list-style-type: none; 
+        padding: 0;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    #admin_dashboard a {
+        display: block;
+        padding: 10px 20px;
+        color: #ffffff;
+        background-color: #004080;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        margin: 10px;
+    }
+
+    #admin_dashboard a:hover {
+        background-color: #2980b9;
+    }
+
+</style>
+
 <h2>Bem-vindo, {{ user.nome_completo }}!</h2>
-<h3>Painel do Administrador</h3>
-<ul>
+<h3>Este é o Painel do Administrador</h3>
+<ul id="admin_dashboard">
     <li><a href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
     <li><a href="{% url 'registrar_usuario' %}">Cadastrar Usuário</a></li>
     <li><a href="{% url 'registrar_emprestimo' %}">Registrar Empréstimo</a></li>

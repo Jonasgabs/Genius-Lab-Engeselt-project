@@ -163,8 +163,7 @@
 ### 3.4. Middleware
 Middleware são camadas que processam requisições e respostas.
 
-python
-Copiar código
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -174,7 +173,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-<a name="3.5"></a>
+
 
 3.5. Templates
 Configurações para renderização de templates.
