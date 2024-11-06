@@ -2,13 +2,14 @@
 
 import os
 from pathlib import Path
+from decouple import config
+
 
 # Diretório base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Chave secreta (mantenha em segredo em produção)
-SECRET_KEY = 'xi09K84HbRqnQuH4HhbHSwRZX5hyLuduvQOYMpcjuNLc1xC8sbO1DrApQFytBwCcQPE'
-
+SECRET_KEY = config('SECRET_KEY')
 # Depuração ativada para desenvolvimento
 DEBUG = True
 
