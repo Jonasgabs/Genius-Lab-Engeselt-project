@@ -164,367 +164,353 @@
 Middleware são camadas que processam requisições e respostas.
 
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ]
 
 
-3.5. Templates
+### 3.5. Templates
 Configurações para renderização de templates.
 
-python
-Copiar código
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Diretório dos templates
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                # Processadores de contexto padrão
-            ],
+
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [BASE_DIR / 'templates'],  # Diretório dos templates
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    # Processadores de contexto padrão
+                ],
+            },
         },
-    },
-]
+    ]
 <a name="3.6"></a>
 
-3.6. Arquivos Estáticos
+### 3.6. Arquivos Estáticos
 Configurações para servir arquivos estáticos.
 
-python
-Copiar código
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-<a name="4"></a>
 
-4. URLs do Projeto (urls.py)
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = [BASE_DIR / 'static']
+
+
+### 4. URLs do Projeto (urls.py)
 O arquivo urls.py na pasta biblioteca_genius_lab é o ponto de entrada para as rotas da aplicação.
 
-python
-Copiar código
-from django.contrib import admin
-from django.urls import path, include
-from django.shortcuts import render
 
-def index(request):
-    return render(request, 'index.html')
+    from django.contrib import admin
+    from django.urls import path, include
+    from django.shortcuts import render
 
-urlpatterns = [
-    path('', index, name='index'),
-    path('admin/', admin.site.urls),
-    path('usuarios/', include('usuarios.urls')),
-    path('livros/', include('livros.urls')),
-    path('emprestimos/', include('emprestimos.urls')),
-]
+    def index(request):
+        return render(request, 'index.html')
+
+    urlpatterns = [
+        path('', index, name='index'),
+        path('admin/', admin.site.urls),
+        path('usuarios/', include('usuarios.urls')),
+        path('livros/', include('livros.urls')),
+        path('emprestimos/', include('emprestimos.urls')),
+    ]
+
 path('', index, name='index'): Rota para a página inicial.
 include('app.urls'): Inclui as rotas definidas em cada aplicativo.
-<a name="5"></a>
 
-5. Aplicativo usuarios
+
+### 5. Aplicativo usuarios
 O aplicativo usuarios gerencia os usuários do sistema.
 
-<a name="5.1"></a>
 
-5.1. Modelos (models.py)
+
+### 5.1. Modelos (models.py)
 Define o modelo de usuário customizado.
 
-python
-Copiar código
-from django.contrib.auth.models import AbstractUser
-from django.db import models
 
-class Usuario(AbstractUser):
-    TIPO_USUARIO_CHOICES = (
-        ('admin', 'Administrador'),
-        ('leitor', 'Leitor'),
-    )
-    tipo_usuario = models.CharField(max_length=10, choices=TIPO_USUARIO_CHOICES)
-    endereco = models.CharField(max_length=255, blank=True, null=True)
-    telefone = models.CharField(max_length=20, blank=True, null=True)
+    from django.contrib.auth.models import AbstractUser
+    from django.db import models
 
-    def __str__(self):
-        return self.username
+    class Usuario(AbstractUser):
+        TIPO_USUARIO_CHOICES = (
+            ('admin', 'Administrador'),
+            ('leitor', 'Leitor'),
+        )
+        tipo_usuario = models.CharField(max_length=10, choices=TIPO_USUARIO_CHOICES)
+        endereco = models.CharField(max_length=255, blank=True, null=True)
+        telefone = models.CharField(max_length=20, blank=True, null=True)
+
+        def __str__(self):
+            return self.username
+
 Herança de AbstractUser: Permite customizar o modelo de usuário padrão do Django.
 Campos Adicionais:
 tipo_usuario: Indica o tipo de usuário (administrador ou leitor).
 endereco e telefone: Informações de contato.
-<a name="5.2"></a>
 
-5.2. Formulários (forms.py)
+
+### 5.2. Formulários (forms.py)
 Define formulários para criação e atualização de usuários.
 
-python
-Copiar código
-from django import forms
-from .models import Usuario
 
-class UsuarioForm(forms.ModelForm):
-    class Meta:
-        model = Usuario
-        fields = ['username', 'password', 'tipo_usuario', 'endereco', 'telefone']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
+    from django import forms
+    from .models import Usuario
+
+    class UsuarioForm(forms.ModelForm):
+        class Meta:
+            model = Usuario
+            fields = ['username', 'password', 'tipo_usuario', 'endereco', 'telefone']
+            widgets = {
+                'password': forms.PasswordInput(),
+            }
 UsuarioForm: Formulário baseado em ModelForm para criar e editar usuários.
 Widgets: Personaliza o campo password para ser um campo de senha.
-<a name="5.3"></a>
 
-5.3. Views (views.py)
+
+### 5.3. Views (views.py)
 Contém as funções de visualização (views) para gerenciar usuários.
 
-python
-Copiar código
-from django.shortcuts import render, redirect
-from .forms import UsuarioForm
-from .models import Usuario
 
-def cadastro_usuario(request):
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST)
-        if form.is_valid():
-            usuario = form.save(commit=False)
-            usuario.set_password(form.cleaned_data['password'])
-            usuario.save()
-            return redirect('index')
-    else:
-        form = UsuarioForm()
-    return render(request, 'cadastro_usuario.html', {'form': form})
+    from django.shortcuts import render, redirect
+    from .forms import UsuarioForm
+    from .models import Usuario
+
+    def cadastro_usuario(request):
+        if request.method == 'POST':
+            form = UsuarioForm(request.POST)
+            if form.is_valid():
+                usuario = form.save(commit=False)
+                usuario.set_password(form.cleaned_data['password'])
+                usuario.save()
+                return redirect('index')
+        else:
+            form = UsuarioForm()
+        return render(request, 'cadastro_usuario.html', {'form': form})
 cadastro_usuario:
 GET: Exibe o formulário de cadastro.
 POST: Processa o formulário e cria um novo usuário.
 usuario.set_password(): Criptografa a senha.
-<a name="5.4"></a>
 
-5.4. URLs (urls.py)
+
+### 5.4. URLs (urls.py)
 Define as rotas para o aplicativo usuarios.
 
-python
-Copiar código
+
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    path('cadastro/', views.cadastro_usuario, name='cadastro_usuario'),
-    path('login/', views.login_usuario, name='login_usuario'),
-    path('logout/', views.logout_usuario, name='logout_usuario'),
-]
+    urlpatterns = [
+        path('cadastro/', views.cadastro_usuario, name='cadastro_usuario'),
+        path('login/', views.login_usuario, name='login_usuario'),
+        path('logout/', views.logout_usuario, name='logout_usuario'),
+    ]
 Rotas:
 /usuarios/cadastro/: Página de cadastro de usuário.
 /usuarios/login/: Página de login.
 /usuarios/logout/: Logout do usuário.
-<a name="6"></a>
 
-6. Aplicativo livros
+
+### 6. Aplicativo livros
 Gerencia o cadastro e manutenção dos livros.
 
-<a name="6.1"></a>
 
-6.1. Modelos (models.py)
+
+### 6.1. Modelos (models.py)
 Define o modelo Livro.
 
-python
-Copiar código
-from django.db import models
 
-class Livro(models.Model):
-    titulo = models.CharField(max_length=255)
-    autor = models.CharField(max_length=255)
-    isbn = models.CharField(max_length=13, unique=True)
-    disponivel = models.BooleanField(default=True)
+    from django.db import models
 
-    def __str__(self):
-        return self.titulo
+    class Livro(models.Model):
+        titulo = models.CharField(max_length=255)
+        autor = models.CharField(max_length=255)
+        isbn = models.CharField(max_length=13, unique=True)
+        disponivel = models.BooleanField(default=True)
+
+        def __str__(self):
+            return self.titulo
 Campos:
 titulo e autor: Informações básicas do livro.
 isbn: Número único de identificação do livro.
 disponivel: Indica se o livro está disponível para empréstimo.
-<a name="6.2"></a>
 
-6.2. Formulários (forms.py)
+
+### 6.2. Formulários (forms.py)
 Define formulários para criar e editar livros.
 
-python
-Copiar código
-from django import forms
-from .models import Livro
 
-class LivroForm(forms.ModelForm):
-    class Meta:
-        model = Livro
-        fields = ['titulo', 'autor', 'isbn', 'disponivel']
-<a name="6.3"></a>
+    from django import forms
+    from .models import Livro
 
-6.3. Views (views.py)
+    class LivroForm(forms.ModelForm):
+        class Meta:
+            model = Livro
+            fields = ['titulo', 'autor', 'isbn', 'disponivel']
+
+
+### 6.3. Views (views.py)
 Contém as views para gerenciar livros.
 
-python
-Copiar código
-from django.shortcuts import render, redirect
-from .forms import LivroForm
-from .models import Livro
 
-def listar_livros(request):
-    livros = Livro.objects.all()
-    return render(request, 'listar_livros.html', {'livros': livros})
+    from django.shortcuts import render, redirect
+    from .forms import LivroForm
+    from .models import Livro
 
-def cadastrar_livro(request):
-    if request.method == 'POST':
-        form = LivroForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_livros')
-    else:
-        form = LivroForm()
-    return render(request, 'cadastrar_livro.html', {'form': form})
+    def listar_livros(request):
+        livros = Livro.objects.all()
+        return render(request, 'listar_livros.html', {'livros': livros})
+
+    def cadastrar_livro(request):
+        if request.method == 'POST':
+            form = LivroForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('listar_livros')
+        else:
+            form = LivroForm()
+        return render(request, 'cadastrar_livro.html', {'form': form})
 listar_livros: Exibe a lista de todos os livros.
 cadastrar_livro: Permite adicionar um novo livro.
-<a name="6.4"></a>
 
-6.4. URLs (urls.py)
+
+### 6.4. URLs (urls.py)
 Define as rotas para o aplicativo livros.
 
-python
-Copiar código
-from django.urls import path
-from . import views
 
-urlpatterns = [
-    path('', views.listar_livros, name='listar_livros'),
-    path('cadastrar/', views.cadastrar_livro, name='cadastrar_livro'),
-]
-<a name="7"></a>
+    from django.urls import path
+    from . import views
 
-7. Aplicativo emprestimos
+    urlpatterns = [
+        path('', views.listar_livros, name='listar_livros'),
+        path('cadastrar/', views.cadastrar_livro, name='cadastrar_livro'),
+    ]
+
+
+### 7. Aplicativo emprestimos
 Gerencia os empréstimos de livros aos usuários.
 
-<a name="7.1"></a>
 
-7.1. Modelos (models.py)
+
+### 7.1. Modelos (models.py)
 Define o modelo Emprestimo.
 
-python
-Copiar código
-from django.db import models
-from usuarios.models import Usuario
-from livros.models import Livro
 
-class Emprestimo(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
-    data_emprestimo = models.DateField(auto_now_add=True)
-    data_devolucao = models.DateField(null=True, blank=True)
+    from django.db import models
+    from usuarios.models import Usuario
+    from livros.models import Livro
 
-    def __str__(self):
-        return f"{self.livro.titulo} emprestado a {self.usuario.username}"
+    class Emprestimo(models.Model):
+        usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+        livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
+        data_emprestimo = models.DateField(auto_now_add=True)
+        data_devolucao = models.DateField(null=True, blank=True)
+
+        def __str__(self):
+            return f"{self.livro.titulo} emprestado a {self.usuario.username}"
 Relacionamentos:
 usuario: Usuário que realizou o empréstimo.
 livro: Livro emprestado.
 Campos de Data:
 data_emprestimo: Data em que o empréstimo foi realizado.
 data_devolucao: Data em que o livro foi devolvido.
-<a name="7.2"></a>
 
-7.2. Formulários (forms.py)
+
+### 7.2. Formulários (forms.py)
 Define formulários para criar e encerrar empréstimos.
 
-python
-Copiar código
-from django import forms
-from .models import Emprestimo
 
-class EmprestimoForm(forms.ModelForm):
-    class Meta:
-        model = Emprestimo
-        fields = ['usuario', 'livro']
-<a name="7.3"></a>
+    from django import forms
+    from .models import Emprestimo
 
-7.3. Views (views.py)
+    class EmprestimoForm(forms.ModelForm):
+        class Meta:
+            model = Emprestimo
+            fields = ['usuario', 'livro']
+
+
+### 7.3. Views (views.py)
 Contém as views para gerenciar empréstimos.
 
-python
-Copiar código
-from django.shortcuts import render, redirect
-from .forms import EmprestimoForm
-from .models import Emprestimo
 
-def listar_emprestimos(request):
-    emprestimos = Emprestimo.objects.all()
-    return render(request, 'listar_emprestimos.html', {'emprestimos': emprestimos})
+    from django.shortcuts import render, redirect
+    from .forms import EmprestimoForm
+    from .models import Emprestimo
 
-def realizar_emprestimo(request):
-    if request.method == 'POST':
-        form = EmprestimoForm(request.POST)
-        if form.is_valid():
-            emprestimo = form.save()
-            emprestimo.livro.disponivel = False
-            emprestimo.livro.save()
-            return redirect('listar_emprestimos')
-    else:
-        form = EmprestimoForm()
-    return render(request, 'realizar_emprestimo.html', {'form': form})
+    def listar_emprestimos(request):
+        emprestimos = Emprestimo.objects.all()
+        return render(request, 'listar_emprestimos.html', {'emprestimos': emprestimos})
+
+    def realizar_emprestimo(request):
+        if request.method == 'POST':
+            form = EmprestimoForm(request.POST)
+            if form.is_valid():
+                emprestimo = form.save()
+                emprestimo.livro.disponivel = False
+                emprestimo.livro.save()
+                return redirect('listar_emprestimos')
+        else:
+            form = EmprestimoForm()
+        return render(request, 'realizar_emprestimo.html', {'form': form})
 listar_emprestimos: Exibe a lista de todos os empréstimos.
 realizar_emprestimo: Permite registrar um novo empréstimo e atualiza o status do livro para indisponível.
-<a name="7.4"></a>
 
-7.4. URLs (urls.py)
+
+### 7.4. URLs (urls.py)
 Define as rotas para o aplicativo emprestimos.
 
-python
-Copiar código
-from django.urls import path
-from . import views
 
-urlpatterns = [
-    path('', views.listar_emprestimos, name='listar_emprestimos'),
-    path('realizar/', views.realizar_emprestimo, name='realizar_emprestimo'),
-]
-<a name="8"></a>
+    from django.urls import path
+    from . import views
 
-8. Templates
+    urlpatterns = [
+        path('', views.listar_emprestimos, name='listar_emprestimos'),
+        path('realizar/', views.realizar_emprestimo, name='realizar_emprestimo'),
+    ]
+
+### 8. Templates
 Os templates são responsáveis pela apresentação visual do sistema.
 
-<a name="8.1"></a>
 
-8.1. Herança de Templates
+
+### 8.1. Herança de Templates
 O template base base.html define a estrutura comum a todas as páginas.
 
-html
-Copiar código
-<!-- templates/base.html -->
 
-{% load static %}
+    <!-- templates/base.html -->
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Sistema de Biblioteca - Genius Lab</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Sistema de Biblioteca - Genius Lab</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">Início</a></li>
-                {% if user.is_authenticated %}
-                    {% if user.tipo_usuario == 'admin' %}
-                        <li><a href="{% url 'cadastro_usuario' %}">Cadastrar Usuário</a></li>
-                        <li><a href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
+    {% load static %}
+
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sistema de Biblioteca - Genius Lab</title>
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    </head>
+    <body>
+        <header>
+            <h1>Sistema de Biblioteca - Genius Lab</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'index' %}">Início</a></li>
+                    {% if user.is_authenticated %}
+                        {% if user.tipo_usuario == 'admin' %}
+                            <li><a href="{% url 'cadastro_usuario' %}">Cadastrar Usuário</a></li>
+                            <li><a href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'logout_usuario' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login_usuario' %}">Login</a></li>
                     {% endif %}
-                    <li><a href="{% url 'logout_usuario' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'login_usuario' %}">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+                </ul>
+            </nav>
+        </header>
 
     {% block content %}
     <!-- Conteúdo específico de cada página -->
@@ -533,83 +519,92 @@ Copiar código
     <footer>
         <p>&copy; 2023 Genius Lab</p>
     </footer>
-</body>
-</html>
+    </body>
+    </html>
+
 {% block content %}: Área onde os templates filhos inserem seu conteúdo.
 {% if user.is_authenticated %}: Exibe opções no menu dependendo do status do usuário.
-<a name="8.2"></a>
 
-8.2. Templates Específicos
+
+### 8.2. Templates Específicos
 Exemplo de um template que herda de base.html:
 
-html
-Copiar código
+
 <!-- templates/index.html -->
 
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 
-{% block content %}
-    <h2>Bem-vindo ao Sistema de Biblioteca!</h2>
-    <p>Utilize o menu para navegar pelo sistema.</p>
-{% endblock %}
-{% extends 'base.html' %}: Indica que este template herda de base.html.
-{% block content %}: Define o conteúdo específico desta página.
-<a name="9"></a>
+    {% block content %}
+        <h2>Bem-vindo ao Sistema de Biblioteca!</h2>
+        <p>Utilize o menu para navegar pelo sistema.</p>
+    {% endblock %}
+    {% extends 'base.html' %}: Indica que este template herda de base.html.
+    {% block content %}: Define o conteúdo específico desta página.
 
-9. Fluxo de Dados no Sistema
+
+### 9. Fluxo de Dados no Sistema
 O sistema permite que usuários interajam com livros e empréstimos de forma controlada.
 
-<a name="9.1"></a>
 
-9.1. Autenticação e Autorização
+
+### 9.1. Autenticação e Autorização
 Usuários Administradores:
 
-Podem cadastrar novos usuários.
-Podem cadastrar novos livros.
-Podem realizar e gerenciar empréstimos.
-Usuários Leitores:
+* Podem cadastrar novos usuários.
+* Podem cadastrar novos livros.
+* Podem realizar e gerenciar empréstimos.
+* Usuários Leitores:
+* Podem visualizar livros disponíveis.
+* Podem solicitar empréstimos (implementação futura).
 
-Podem visualizar livros disponíveis.
-Podem solicitar empréstimos (implementação futura).
-<a name="9.2"></a>
 
-9.2. Gerenciamento de Livros
+### 9.2. Gerenciamento de Livros
 Cadastro de Livros:
 
-Administradores podem adicionar livros ao sistema.
-Informações como título, autor e ISBN são registradas.
-Listagem de Livros:
+* Administradores podem adicionar livros ao sistema.
+* Informações como título, autor e ISBN são registradas.
+* Listagem de Livros:
+* Todos os usuários podem visualizar os livros cadastrados.
 
-Todos os usuários podem visualizar os livros cadastrados.
-<a name="9.3"></a>
-
-9.3. Gerenciamento de Empréstimos
+### 9.3. Gerenciamento de Empréstimos
 Realização de Empréstimos:
 
-Administradores podem registrar um empréstimo associando um livro a um usuário.
-Ao realizar um empréstimo, o status do livro é atualizado para indisponível.
-Listagem de Empréstimos:
+* Administradores podem registrar um empréstimo associando um livro a um usuário.
+* Ao realizar um empréstimo, o status do livro é atualizado para indisponível.
+* Listagem de Empréstimos:
+* É possível visualizar todos os empréstimos realizados, com informações de datas e usuários.
 
-É possível visualizar todos os empréstimos realizados, com informações de datas e usuários.
-<a name="10"></a>
 
-10. Conclusão
-Este documento detalhou a funcionalidade completa do sistema de biblioteca desenvolvido na Genius Lab. Cada componente foi explicado, desde a estrutura de arquivos até a comunicação entre os módulos. Esperamos que esta documentação facilite a compreensão do sistema e sirva como referência para futuras manutenções ou extensões.
+### 10. Conclusão
 
-Principais Conceitos Abordados:
+###### Este documento detalhou a funcionalidade completa do sistema de biblioteca desenvolvido na Genius Lab. Cada componente foi explicado, desde a estrutura de arquivos até a comunicação entre os módulos. Esperamos que esta documentação facilite a compreensão do sistema e sirva como referência para futuras manutenções ou extensões.
 
-Arquitetura Django: Compreensão de como projetos e aplicativos são estruturados.
-Modelos: Definição de estruturas de dados usando models.py.
-Formulários: Criação de formulários com forms.py para interação com o usuário.
-Views: Lógica de processamento em views.py que manipula requisições e respostas.
-URLs: Mapeamento de rotas em urls.py para direcionar as requisições.
-Templates: Utilização de templates para renderização de páginas HTML.
-Autenticação: Implementação de um modelo de usuário customizado e gerenciamento de autenticação.
-Comunicação entre Aplicativos: Como diferentes aplicativos (usuarios, livros, emprestimos) interagem através de relacionamentos em modelos.
-Próximos Passos:
+##### Principais Conceitos Abordados:
 
-Implementar Funcionalidades Adicionais: Como renovação de empréstimos, reservas de livros e notificações.
-Melhorias na Interface: Aprimorar o design e a usabilidade do sistema.
-Segurança: Implementar medidas de segurança adicionais para proteger os dados e as operações do sistema.
-Testes Automatizados: Desenvolver testes para garantir a confiabilidade do sistema.
-Nota: Esta documentação deve ser atualizada conforme o sistema evolui, garantindo que todas as alterações sejam refletidas e que a equipe tenha um recurso confiável para referência.
+* Arquitetura Django: Compreensão de como projetos e aplicativos são estruturados.
+
+* Modelos: Definição de estruturas de dados usando models.py.
+
+* Formulários: Criação de formulários com forms.py para interação com o usuário.
+
+* Views: Lógica de processamento em views.py que manipula requisições e respostas.
+
+* URLs: Mapeamento de rotas em urls.py para direcionar as requisições.
+
+* Templates: Utilização de templates para renderização de páginas HTML.
+
+* Autenticação: Implementação de um modelo de usuário customizado e gerenciamento de autenticação.
+
+* Comunicação entre Aplicativos: Como diferentes aplicativos (usuarios, livros, emprestimos) interagem através de relacionamentos em modelos.
+
+* Próximos Passos:
+
+* Implementar Funcionalidades Adicionais: Como renovação de empréstimos, reservas de livros e notificações.
+
+* Melhorias na Interface: Aprimorar o design e a usabilidade do sistema.
+
+* Segurança: Implementar medidas de segurança adicionais para proteger os dados e as operações do sistema.
+
+* Testes Automatizados: Desenvolver testes para garantir a confiabilidade do sistema.
+
+* Nota: Esta documentação deve ser atualizada conforme o sistema evolui, garantindo que todas as alterações sejam refletidas e que a equipe tenha um recurso confiável para referência.
