@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Empréstimos Pendentes</h2>
+<table border="1">
+    <tr>
+        <th>Livro</th>
+        <th>Usuário</th>
+        <th>Data de Solicitação</th>
+        <th>Data de Devolução Prevista</th>
+        <th>Ações</th>
+    </tr>
+    {% for emprestimo in emprestimos_pendentes %}
+    <tr>
+        <td>{{ emprestimo.livro.titulo }}</td>
+        <td>{{ emprestimo.usuario.nome_completo }}</td>
+        <td>{{ emprestimo.data_emprestimo }}</td>
+        <td>{{ emprestimo.data_devolucao_prevista }}</td>
+        <td>
+            <a href="{% url 'aprovar_emprestimo' emprestimo.id %}">Aprovar</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Nenhum empréstimo pendente.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

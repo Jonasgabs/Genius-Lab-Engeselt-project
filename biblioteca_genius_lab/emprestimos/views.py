@@ -6,6 +6,7 @@ from .forms import RegistrarEmprestimoForm, DevolverEmprestimoForm, SolicitarEmp
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.utils import timezone
 
 @login_required
 def registrar_emprestimo(request):
@@ -52,12 +53,9 @@ def relatorio_emprestimos(request):
     if request.user.tipo_usuario != 'admin':
         return redirect('leitor_dashboard')
 
-    emprestimos = None
-    if request.method == 'POST':
-        data_inicio = request.POST.get('data_inicio')
-        data_fim = request.POST.get('data_fim')
-        emprestimos = Emprestimo.objects.filter(data_emprestimo__range=[data_inicio, data_fim])
+    emprestimos = Emprestimo.objects.all().order_by('-data_emprestimo')
     return render(request, 'emprestimos/relatorio_emprestimos.html', {'emprestimos': emprestimos})
+
 
 @login_required
 def solicitar_emprestimo(request):
@@ -82,3 +80,23 @@ def solicitar_emprestimo(request):
 def historico_emprestimos(request):
     emprestimos = Emprestimo.objects.filter(usuario=request.user)
     return render(request, 'emprestimos/historico_emprestimos.html', {'emprestimos': emprestimos})
+
+@login_required
+def aprovar_emprestimo(request, emprestimo_id):
+    if request.user.tipo_usuario != 'leitor':
+        return redirect('admin_dashboard')
+    emprestimo = get_object_or_404(Emprestimo, id=emprestimo_id)
+    if request.method == 'POST':
+        emprestimo.status = 'Aprovado'
+        emprestimo.data_aprovacao = timezone.now()
+        emprestimo.save()
+        messages.success(request, 'Empréstimo aprovado com sucesso.')
+        return redirect('listar_emprestimos_pendentes')
+    return render(request, 'emprestimos/aprovar_emprestimo.html', {'emprestimo': emprestimo})
+
+@login_required
+def listar_emprestimos_pendentes(request):
+    if request.user.tipo_usuario != 'leitor':
+        return redirect('admin_dashboard')
+    emprestimos_pendentes = Emprestimo.objects.filter(status='Pendente')
+    return render(request, 'emprestimos/emprestimos_pendentes.html', {'emprestimos_pendentes': emprestimos_pendentes})

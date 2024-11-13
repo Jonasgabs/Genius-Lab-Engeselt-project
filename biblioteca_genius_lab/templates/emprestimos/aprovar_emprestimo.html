@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Aprovar Empréstimo</h2>
+<p>Tem certeza que deseja aprovar o empréstimo do livro "<strong>{{ emprestimo.livro.titulo }}</strong>" para o usuário "<strong>{{ emprestimo.usuario.nome_completo }}</strong>"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sim, Aprovar</button>
+    <a href="{% url 'listar_emprestimos_pendentes' %}">Cancelar</a>
+</form>
+{% endblock %}

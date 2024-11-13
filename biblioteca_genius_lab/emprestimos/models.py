@@ -5,10 +5,12 @@ from livros.models import Livro
 from usuarios.models import Usuario
 
 class Emprestimo(models.Model):
-    STATUS_CHOICES = (
-        ('aberto', 'Em Aberto'),
-        ('concluido', 'Concluído'),
-    )
+    STATUS_CHOICES = [
+        ('Pendente', 'Pendente'),
+        ('Aprovado', 'Aprovado'),
+        ('Recusado', 'Recusado'),
+        ('Devolvido', 'Devolvido'),
+    ]
 
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)

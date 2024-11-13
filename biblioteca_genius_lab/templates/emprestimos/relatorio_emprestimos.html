@@ -13,12 +13,35 @@
     }
     
 </style>
-<h2>Meu Histórico de Empréstimos</h2>
-<ul id="historico_emprestimos">
+<h2>Relatório de Empréstimos</h2>
+<table border="1">
+    <tr>
+        <th>Livro</th>
+        <th>Usuário</th>
+        <th>Data de Empréstimo</th>
+        <th>Data de Devolução Prevista</th>
+        <th>Data de Devolução</th>
+        <th>Status</th>
+    </tr>
     {% for emprestimo in emprestimos %}
-        <li>{{ emprestimo.livro.titulo }} - {{ emprestimo.data_emprestimo }} - Status: {{ emprestimo.get_status_display }}</li>
+    <tr>
+        <td>{{ emprestimo.livro.titulo }}</td>
+        <td>{{ emprestimo.usuario.nome_completo }}</td>
+        <td>{{ emprestimo.data_emprestimo|date:"d/m/Y" }}</td>
+        <td>{{ emprestimo.data_devolucao_prevista|date:"d/m/Y" }}</td>
+        <td>
+            {% if emprestimo.data_devolucao %}
+                {{ emprestimo.data_devolucao|date:"d/m/Y" }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+        <td>{{ emprestimo.status }}</td>
+    </tr>
     {% empty %}
-        <li>Você não possui empréstimos registrados.</li>
+    <tr>
+        <td colspan="6">Nenhum empréstimo encontrado.</td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% endblock %}

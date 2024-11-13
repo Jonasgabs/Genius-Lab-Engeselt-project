@@ -37,12 +37,12 @@
 </style>
 
 <h2>Bem-vindo, {{ user.nome_completo }}!</h2>
-<h3>Este é o Painel do Administrador</h3>
+<h3>Painel do Administrador</h3>
 <ul id="admin_dashboard">
     <li><a href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
-    <li><a href="{% url 'registrar_usuario' %}">Cadastrar Usuário</a></li>
-    <li><a href="{% url 'registrar_emprestimo' %}">Registrar Empréstimo</a></li>
-    <li><a href="{% url 'devolver_emprestimo' %}">Registrar Devolução</a></li>
+    <li><a href="{% url 'registrar_usuario' %}">Cadastrar Usuário</a></li>  
     <li><a href="{% url 'relatorio_emprestimos' %}">Relatório de Empréstimos</a></li>
+    <li><a href="{% url 'devolver_emprestimo' %}">Registrar Devolução</a></li>
+
 </ul>
 {% endblock %}
