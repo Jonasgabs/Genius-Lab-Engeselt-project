@@ -25,7 +25,7 @@
 
 3 - *Crie o banco de dados*
 
-    CREATE DATABASE Genius_Lab_lib;
+    CREATE DATABASE "Genius_Lab_lib";
 
 4 - *no terminal aplicaque as migracoes*
 

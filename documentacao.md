@@ -607,4 +607,3 @@ Realização de Empréstimos:
 
 * Testes Automatizados: Desenvolver testes para garantir a confiabilidade do sistema.
 
-* Nota: Esta documentação deve ser atualizada conforme o sistema evolui, garantindo que todas as alterações sejam refletidas e que a equipe tenha um recurso confiável para referência.
